@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Resultaten</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Resultaten</h1>
+        <p>Je hebt {{ score }} van de {{ total }} correct!</p>
+
+        <ul>
+            {% for key, result in feedback.items() %}
+                <li>{{ key }}: {{ result }}</li>
+            {% endfor %}
+        </ul>
+
+        <a href="/">Opnieuw proberen</a>
+    </div>
+</body>
+</html>
