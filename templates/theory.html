@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theorie Oefening</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Theorie Oefening</h1>
+        <form action="/theory" method="POST">
+            {% for framework, steps in frameworks.items() %}
+                <h2>{{ framework }}</h2>
+                {% for step in steps %}
+                    <label for="{{ framework }}_{{ step }}">{{ step }}:</label><br>
+                    <select name="{{ framework }}_{{ step }}" id="{{ framework }}_{{ step }}">
+                        <option value="" disabled selected>Kies de juiste uitleg</option>
+                        {% for explanation_key, explanation_value in explanations.items() %}
+                            <option value="{{ explanation_value }}">{{ explanation_value }}</option>
+                        {% endfor %}
+                    </select>
+                    <br><br>
+                {% endfor %}
+            {% endfor %}
+            <button type="submit">Indienen</button>
+        </form>
+    </div>
+</body>
+</html>
