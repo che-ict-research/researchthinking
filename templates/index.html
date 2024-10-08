@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waterfilter Casus Denkmanieren</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Denkmanieren Oefening: Waterfilter Casus</h1>
+    
+    <div class="quiz-container">
+        <div class="options">
+            <h2>Acties</h2>
+            <div id="option1" class="draggable" draggable="true" ondragstart="drag(event)">Het interviewen van dorpsbewoners om hun waterbehoeften te begrijpen.</div>
+            <div id="option2" class="draggable" draggable="true" ondragstart="drag(event)">Het definiëren van het probleem: hoe kan een betaalbare en duurzame waterfilter worden ontworpen?</div>
+            <div id="option3" class="draggable" draggable="true" ondragstart="drag(event)">Het brainstormen van ideeën voor waterfilters met lokaal beschikbare materialen.</div>
+            <div id="option4" class="draggable" draggable="true" ondragstart="drag(event)">Het bouwen van verschillende waterfilterprototypes.</div>
+            <div id="option5" class="draggable" draggable="true" ondragstart="drag(event)">Het testen van de prototypes door dorpsbewoners.</div>
+            <div id="option6" class="draggable" draggable="true" ondragstart="drag(event)">Het opdelen van het probleem in verschillende componenten, zoals sedimentverwijdering en bacterie-eliminatie.</div>
+            <div id="option7" class="draggable" draggable="true" ondragstart="drag(event)">Het analyseren van bestaande filtersystemen en het herkennen van patronen in de watervervuiling.</div>
+            <div id="option8" class="draggable" draggable="true" ondragstart="drag(event)">Het isoleren van de essentiële kenmerken van een waterfilter en weglaten van irrelevante details.</div>
+            <div id="option9" class="draggable" draggable="true" ondragstart="drag(event)">Het ontwerpen van een algoritme om het filterontwerp aan te passen op basis van verontreinigingen.</div>
+            <div id="option10" class="draggable" draggable="true" ondragstart="drag(event)">Hoe effectief zijn lokaal beschikbare materialen voor waterfiltratie?</div>
+            <div id="option11" class="draggable" draggable="true" ondragstart="drag(event)">Een waterfilter van lokaal zand en koolstof vermindert verontreinigingen tot een veilig niveau.</div>
+            <div id="option12" class="draggable" draggable="true" ondragstart="drag(event)">Experimenten uitvoeren met verschillende waterfilters en waterkwaliteit testen.</div>
+            <div id="option13" class="draggable" draggable="true" ondragstart="drag(event)">Documenteren van de effectiviteit van elk filter.</div>
+            <div id="option14" class="draggable" draggable="true" ondragstart="drag(event)">Conclusies trekken over welke materialen en ontwerpen het meest effectief zijn.</div>
+        </div>
+        
+        <div class="questions">
+            <h2>Stappen</h2>
+            <div id="drop1" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Empathize (Design Thinking)</div>
+            <div id="drop2" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Define (Design Thinking)</div>
+            <div id="drop3" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Ideate (Design Thinking)</div>
+            <div id="drop4" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Prototype (Design Thinking)</div>
+            <div id="drop5" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Test (Design Thinking)</div>
+            <div id="drop6" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Decompose (Computational Thinking)</div>
+            <div id="drop7" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Pattern Recognition (Computational Thinking)</div>
+            <div id="drop8" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Abstraction (Computational Thinking)</div>
+            <div id="drop9" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Algorithm Design (Computational Thinking)</div>
+            <div id="drop10" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Question (Scientific Thinking)</div>
+            <div id="drop11" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Hypothesis (Scientific Thinking)</div>
+            <div id="drop12" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Experiment (Scientific Thinking)</div>
+            <div id="drop13" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Results (Scientific Thinking)</div>
+            <div id="drop14" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">Conclusion (Scientific Thinking)</div>
+        </div>
+    </div>
+    
+    <button onclick="checkAnswers()">Check Answers</button>
+    <p id="result"></p>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

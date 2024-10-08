@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denkmanieren Training</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .options,
+        .steps {
+            min-height: 200px;
+            /* Voorbeeld om ruimte te geven voor de sleepactie */
+        }
+
+        .draggable {
+            cursor: grab;
+            /* Verandert de cursor bij hoveren */
+        }
+
+        .draggable:active {
+            cursor: grabbing;
+            /* Verandert de cursor tijdens het slepen */
+        }
+
+        .dragging {
+            opacity: 0.5;
+            /* Maakt het element doorzichtig */
+            transform: rotate(-2deg) translate(5px, 5px);
+            /* Draait het element en beweegt het een beetje */
+            transition: transform 1.0s ease, opacity 1.0s ease;
+            /* Voegt een soepele overgang toe */
+            color: blue;
+        }
+    </style>
+    <script>
+        const introUrl = "{{ url_for('index') }}"
+       
+    </script>
+</head>
+
+<body data-page="1" class="bg-gray-100">
+
+    <div class="container relative mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+        <h1 class="text-2xl font-bold mb-4">Denkmanieren Oefening: Pagina <span id="page-number">1</span></h1>
+        <div id="questions">
+            <p class="mb-6 text-lg">
+                Sleep de acties (links) naar de juiste denkstappen (rechts). Je kunt een actie terug slepen naar de
+                lijst als je van gedachten verandert.
+            </p>
+
+            <div class="quiz-container grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-100 p-4 rounded-md shadow-md">
+                    <h2 class="text-xl font-semibold mb-4">Acties</h2>
+                    <div class="options" id="action-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <!-- Acties worden dynamisch ingeladen via JavaScript -->
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-md shadow-md">
+                    <h2 class="text-xl font-semibold mb-4">Denkstappen</h2>
+                    <div class="steps" id="step-list" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <!-- Stappen worden dynamisch ingeladen via JavaScript -->
+                </div>
+            </div>
+
+            <p id="result" class="mt-4 text-lg"></p>
+        </div>
+        <div id="quiz-text" class="mb-6 text-lg" ></div>
+        <div id="quiz-content">
+            <!-- Hier komen de vragen en stappen -->
+        </div>
+
+        <div id="quiz-navigation" class="flex justify-between mt-4"></div>
+            <!-- Vorige knop -->
+            <button id="prevPage" onclick="changePage(currentPage - 1)"
+                class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-blue-500 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center"
+                style="margin-left: -25px;">
+                &lt;
+            </button>
+
+            <!-- Volgende knop -->
+            <button id="nextPage" onclick="changePage(currentPage + 1)"
+                class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-blue-500 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center"
+                style="margin-right: -25px;">
+                &gt;
+            </button>
+
+
+            <div class="flex justify-center mt-6">
+                <button id="checkAnswers" onclick="checkAnswers()"
+                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full">
+                        Controleer Antwoorden
+                </button>
+            </div>
+              
+        </div>
+    </div>
+
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

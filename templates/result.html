@@ -3,21 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/styles.css">
     <title>Resultaten</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Resultaten</h1>
-        <p>Je hebt {{ score }} van de {{ total }} correct!</p>
-
-        <ul>
-            {% for key, result in feedback.items() %}
-                <li>{{ key }}: {{ result }}</li>
-            {% endfor %}
-        </ul>
-
-        <a href="/">Opnieuw proberen</a>
-    </div>
+    <h1>Case Resultaten</h1>
+    
+    <h2>Jouw Antwoorden</h2>
+    <ul>
+        {% for step, result in results.items() %}
+            <li>
+                <strong>{{ step }}:</strong> 
+                Jouw antwoord: {{ result.selected_answer }} 
+                {% if result.correct %}
+                    <span style="color: green;">(Correct)</span>
+                {% else %}
+                    <span style="color: red;">(Fout)</span>
+                    <br> Correcte stap: {{ result.correct_step }} <!-- Toon de correcte stap -->
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <h2>Frameworks</h2>
+    <ul>
+        {% for framework, steps in frameworks.items() %}
+            <li><strong>{{ framework }}:</strong>
+                <ul>
+                    {% for step in steps %}
+                        <li>{{ step }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

@@ -3,29 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toegepaste Oefening (Casus)</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <title>Casus Oefening</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Toegepaste Oefening (Casus)</h1>
-        <p>In een afgelegen dorp is er een gebrek aan schoon drinkwater. De inwoners zijn afhankelijk van oppervlaktewater dat vaak vervuild is. Er is een dringende behoefte aan betaalbare, duurzame waterfilters die de lokale bevolking zelf kan maken en gebruiken. </p>
-        <form action="/case" method="POST">
-            {% for framework, steps in frameworks.items() %}
-                <h2>{{ framework }}</h2>
-                {% for step in steps %}
-                    <label for="{{ framework }}_{{ step }}">{{ step }}:</label><br>
-                    <select name="{{ framework }}_{{ step }}" id="{{ framework }}_{{ step }}">
-                        <option value="" disabled selected>Kies het juiste praktijkvoorbeeld</option>
-                        {% for example_key, example_value in case_examples.items() %}
-                            <option value="{{ example_value }}">{{ example_value }}</option>
+        <h1>Casus Oefening (Drag-and-Drop)</h1>
+        <p>Casus: "In een afgelegen dorp is er een gebrek aan schoon drinkwater. De inwoners zijn afhankelijk van oppervlaktewater dat vaak vervuild is. Er is een dringende behoefte aan betaalbare, duurzame waterfilters die de lokale bevolking zelf kan maken en gebruiken."</p>
+        <p>Zet de juiste uitwerking bij de juiste stap van de desbetreffende denkwijze.</p>
+        <div class="content-wrapper">
+            <!-- Vragenlijst -->
+            <div class="questions">
+                <form id="quizForm" action="/case" method="POST">
+                    {% for framework, steps in frameworks.items() %}
+                        <h2>{{ framework }}</h2>
+                        {% for step in steps %}
+                            <label>{{ step }}</label>
+                            <div class="droppable" data-step="{{ step }}"></div>
                         {% endfor %}
-                    </select>
-                    <br><br>
+                    {% endfor %}
+                    <button type="submit">Indienen</button>
+                </form>
+            </div>
+
+            <!-- Antwoordopties -->
+            <div class="answers" id="answers">
+                <h3>Beschikbare uitwerkingen:</h3>
+                {% for case_key, case_value in case_examples.items() %}
+                    <div class="draggable" draggable="true" data-example="{{ case_key }}">
+                        {{ case_value }}
+                    </div>
                 {% endfor %}
-            {% endfor %}
-            <button type="submit">Indienen</button>
-        </form>
+            </div>
+        </div>
     </div>
+
+    <script>
+        const draggables = document.querySelectorAll('.draggable');
+        const droppables = document.querySelectorAll('.droppable');
+        const answersContainer = document.getElementById('answers');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        droppables.forEach(droppable => {
+            droppable.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                droppable.classList.add('hovered');
+            });
+
+            droppable.addEventListener('dragleave', () => {
+                droppable.classList.remove('hovered');
+            });
+
+            droppable.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const dragging = document.querySelector('.dragging');
+                if (dragging) {
+                    if (!droppable.querySelector('.draggable')) {  // Check if the droppable is empty
+                        droppable.appendChild(dragging);  // Move the draggable element into the droppable
+                        droppable.classList.remove('hovered');
+                    } else {
+                        // Move the item back to the answers list
+                        answersContainer.appendChild(dragging);  // Corrected from 'dropping' to 'dragging'
+                        droppable.classList.remove('hovered');
+                    }
+                }
+            });
+        });
+
+        document.getElementById('quizForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    let answers = {};
+    droppables.forEach(droppable => {
+        if (droppable.querySelector('.draggable')) {
+            answers[droppable.dataset.step] = droppable.querySelector('.draggable').dataset.example;
+        }
+    });
+
+    // Debugging: Log the answers object to the console
+    console.log('Answers being submitted:', answers);
+
+    // Post the answers to the server
+    fetch('/case', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(answers)
+    }).then(response => response.json())
+      .then(result => {
+        // Handle the result (e.g., redirect to result page)
+        window.location.href = "/result";
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+});
+    </script>
 </body>
 </html>

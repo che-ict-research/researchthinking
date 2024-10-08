@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introductie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        const introUrl = "{{ url_for('index') }}"; // Verkrijg de URL van de intro-pagina
+    </script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+        <h1 class="text-3xl font-bold mb-4">Oefening: Waterfilter Casus</h1>
+        <p class="text-lg mb-6">
+            In deze oefening leer je hoe je problemen aanpakt met behulp van Design Thinking, Computational Thinking, en Scientific Thinking.
+            Je gaat stap voor stap de acties toewijzen aan de juiste denkstap.
+        </p>
+        <p class="text-lg mb-6">
+            Casus: Ontwikkel een duurzaam waterfilter dat door dorpsbewoners in een afgelegen dorp kan worden gebruikt om schoon drinkwater te krijgen.
+        </p>
+        <a href="{{ url_for('quiz', page=1) }}" class="bg-blue-500 text-white py-2 px-4 rounded-lg">Start de oefening</a>
+    </div>
+</body>
+</html>

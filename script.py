@@ -1,151 +1,149 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Zorg ervoor dat je een veilige sleutel gebruikt
 
-# Raamwerken en hun stappen
+# Frameworks met stappen (voorbeelddata)
 frameworks = {
-    "Design Thinking": ["Empathize", "Define", "Ideate", "Prototype", "Test"],
-    "Computational Thinking": ["Decomposition", "Pattern Recognition", "Abstraction", "Algorithm Design"],
-    "Scientific Thinking": ["Vraag", "Hypothese", "Experiment", "Resultaten", "Conclusie"]
+    'Design Thinking': ['Empathize', 'Define', 'Ideate', 'Prototype', 'Test'],
+    'Computational Thinking': ['Decomposition', 'Pattern Recognition', 'Abstraction', 'Algorithm Design'],
+    'Scientific Thinking': ['Question', 'Hypothesis', 'Experiment', 'Results', 'Conclusion']
 }
 
-# Uitleg voor de theorie-oefening
-theory_explanations = {
-    "Empathize": "Het begrijpen van de behoeften van gebruikers door observatie en interactie.",
-    "Define": "Het specificeren van het probleem of de uitdaging die moet worden opgelost.",
-    "Ideate": "Het bedenken van verschillende creatieve oplossingen voor het probleem.",
-    "Prototype": "Het maken van een eenvoudig model of versie van de oplossing om te testen.",
-    "Test": "Het evalueren van de oplossing door gebruikersfeedback en aanpassingen.",
-    "Decomposition": "Het splitsen van een groot probleem in kleinere, beter beheersbare stukken.",
-    "Pattern Recognition": "Het herkennen van terugkerende patronen in data of problemen.",
-    "Abstraction": "Het vereenvoudigen van een probleem door alleen de essentiële onderdelen te overwegen.",
-    "Algorithm Design": "Het ontwerpen van een reeks stappen of procedures om een probleem op te lossen.",
-    "Vraag": "Het formuleren van een onderzoeksvraag om een probleem te onderzoeken.",
-    "Hypothese": "Een veronderstelling doen over wat de uitkomst van het experiment zou kunnen zijn.",
-    "Experiment": "Het uitvoeren van een test om de hypothese te onderzoeken.",
-    "Resultaten": "Het verzamelen en analyseren van gegevens die voortkomen uit het experiment.",
-    "Conclusie": "Het trekken van een conclusie op basis van de resultaten en het bevestigen of weerleggen van de hypothese."
+# Voorbeeld uitleggen (theorie)
+explanations = {
+    'Empathize': 'Inleven in de gebruiker',
+    'Define': 'Het probleem duidelijk omschrijven',
+    'Ideate': 'Creatieve oplossingen bedenken',
+    'Prototype': 'Een prototype bouwen',
+    'Test': 'Het prototype testen',
+    'Decomposition': 'Het probleem opdelen in kleinere stukken',
+    'Pattern Recognition': 'Herkennen van patronen in de gegevens',
+    'Abstraction': 'Essentiële informatie identificeren',
+    'Algorithm Design': 'Een stapsgewijze oplossing ontwerpen',
+    'Question': 'Stel een onderzoeksvraag',
+    'Hypothesis': 'Formuleer een testbare hypothese',
+    'Experiment': 'Voer een experiment uit',
+    'Results': 'Verzamel en analyseer de resultaten',
+    'Conclusion': 'Trek een conclusie op basis van de resultaten'
 }
 
-# Praktijkvoorbeelden uit de casus voor de toegepaste oefening
+# Voorbeeld casusvoorbeelden (praktijk)
 case_examples = {
-    "Empathize": "Onderzoek naar hoe huishoudens hun waterverbruik monitoren en welke uitdagingen zij ervaren.",
-    "Define": "Het vaststellen van het probleem: Gebruikers hebben moeite om hun waterverbruik real-time te monitoren.",
-    "Ideate": "Het brainstormen over mogelijke oplossingen, zoals een app die waterverbruik in real-time toont.",
-    "Prototype": "Het maken van een eenvoudige wireframe van de mobiele app om feedback te verzamelen van potentiële gebruikers.",
-    "Test": "Een testgroep gebruikers de app laten gebruiken en hun feedback verzamelen om verbeteringen door te voeren.",
-    "Decomposition": "Het opsplitsen van het probleem in kleinere componenten: datacollectie, real-time verwerking, en gebruikersinterface.",
-    "Pattern Recognition": "Herkenning van patronen in waterverbruik, zoals piekmomenten tijdens het ochtendgebruik of specifieke apparaten die veel water verbruiken.",
-    "Abstraction": "Het abstraheren van het probleem door alleen te focussen op de belangrijkste variabelen: tijd, waterverbruik en locatie.",
-    "Algorithm Design": "Het ontwerpen van een algoritme dat waterverbruik voorspelt op basis van historische data en real-time inputs.",
-    "Vraag": "Hoe kan een mobiele app bijdragen aan het verminderen van waterverbruik in huishoudens?",
-    "Hypothese": "Als gebruikers real-time inzicht krijgen in hun waterverbruik, zullen ze bewuster omgaan met watergebruik en minder verbruiken.",
-    "Experiment": "Een groep huishoudens gebruikt de app voor een maand, terwijl een controlegroep de app niet gebruikt.",
-    "Resultaten": "De data wordt verzameld en vergeleken: de gebruikers van de app verbruiken gemiddeld 10% minder water dan de controlegroep.",
-    "Conclusie": "De hypothese wordt bevestigd: real-time feedback over waterverbruik draagt bij aan vermindering van waterverbruik."
+    'Empathize': 'Het interviewen van gebruikers om hun behoeften te begrijpen',
+    'Define': 'De inzichten uit het interview gebruiken om het probleem te definiëren',
+    'Ideate': 'Brainstormen over mogelijke oplossingen op basis van het gedefinieerde probleem',
+    'Prototype': 'Een eenvoudige versie van een oplossing creëren',
+    'Test': 'Het prototype testen met gebruikers en feedback verzamelen',
+    'Decomposition': 'Een groot programmeerprobleem splitsen in kleinere modules',
+    'Pattern Recognition': 'Terugkerende problemen of patronen herkennen tijdens het ontwikkelen',
+    'Abstraction': 'Onbelangrijke details weglaten en focussen op de kern van het probleem',
+    'Algorithm Design': 'Een duidelijk stapsgewijs algoritme maken om het probleem op te lossen',
+    'Question': 'Bepalen welke onderzoeksvraag je wilt beantwoorden',
+    'Hypothesis': 'Voorspellen wat het resultaat van een experiment zal zijn',
+    'Experiment': 'Een reeks tests uitvoeren om de hypothese te testen',
+    'Results': 'De uitkomsten van het experiment analyseren',
+    'Conclusion': 'Op basis van de resultaten een conclusie trekken'
 }
 
-# Correcte antwoorden voor de theorie-oefening
-theory_correct_answers = {
-    "Design Thinking": {
-        "Empathize": theory_explanations["Empathize"],
-        "Define": theory_explanations["Define"],
-        "Ideate": theory_explanations["Ideate"],
-        "Prototype": theory_explanations["Prototype"],
-        "Test": theory_explanations["Test"]
-    },
-    "Computational Thinking": {
-        "Decomposition": theory_explanations["Decomposition"],
-        "Pattern Recognition": theory_explanations["Pattern Recognition"],
-        "Abstraction": theory_explanations["Abstraction"],
-        "Algorithm Design": theory_explanations["Algorithm Design"]
-    },
-    "Scientific Thinking": {
-        "Vraag": theory_explanations["Vraag"],
-        "Hypothese": theory_explanations["Hypothese"],
-        "Experiment": theory_explanations["Experiment"],
-        "Resultaten": theory_explanations["Resultaten"],
-        "Conclusie": theory_explanations["Conclusie"]
-    }
-}
+@app.route('/')
+def choose_quiz():
+    return render_template('choose.html')
 
-# Correcte antwoorden voor de casus-oefening
-case_correct_answers = {
-    "Design Thinking": {
-        "Empathize": case_examples["Empathize"],
-        "Define": case_examples["Define"],
-        "Ideate": case_examples["Ideate"],
-        "Prototype": case_examples["Prototype"],
-        "Test": case_examples["Test"]
-    },
-    "Computational Thinking": {
-        "Decomposition": case_examples["Decomposition"],
-        "Pattern Recognition": case_examples["Pattern Recognition"],
-        "Abstraction": case_examples["Abstraction"],
-        "Algorithm Design": case_examples["Algorithm Design"]
-    },
-    "Scientific Thinking": {
-        "Vraag": case_examples["Vraag"],
-        "Hypothese": case_examples["Hypothese"],
-        "Experiment": case_examples["Experiment"],
-        "Resultaten": case_examples["Resultaten"],
-        "Conclusie": case_examples["Conclusie"]
-    }
-}
-
-@app.route("/", methods=["GET", "POST"])
-def index():
-    return render_template("home.html")
-
-@app.route("/theory", methods=["GET", "POST"])
-def theory():
-    if request.method == "POST":
-        submitted_answers = {}
+@app.route('/theory', methods=['GET', 'POST'])
+def theory_quiz():
+    if request.method == 'POST':
+        answers = request.get_json()
         score = 0
-        total = 0
+        total = len(answers)
         feedback = {}
 
-        for framework, steps in frameworks.items():
-            submitted_answers[framework] = {}
-            for step in steps:
-                explanation = request.form.get(f"{framework}_{step}")
-                submitted_answers[framework][step] = explanation
+        # Controleer antwoorden en geef feedback
+        for step, given_explanation in answers.items():
+            correct_explanation = explanations.get(step)
+            if given_explanation == correct_explanation:
+                score += 1
+                feedback[step] = {
+                    'answer': given_explanation,
+                    'correct': True
+                }
+            else:
+                feedback[step] = {
+                    'answer': given_explanation,
+                    'correct': False
+                }
 
-                total += 1
-                if explanation == theory_correct_answers[framework][step]:
-                    score += 1
-                    feedback[f"{framework} - {step}"] = "Correct"
-                else:
-                    feedback[f"{framework} - {step}"] = f"Incorrect, het juiste antwoord is: {theory_correct_answers[framework][step]}"
+        # Sla de resultaten op in de sessie
+        session['theory_results'] = feedback
+        session['frameworks'] = frameworks
 
-        return render_template("result.html", score=score, total=total, feedback=feedback)
+        # Stuur de score en feedback terug naar de client
+        return jsonify({'score': score, 'total': total, 'feedback': feedback})
 
-    return render_template("theory.html", frameworks=frameworks, explanations=theory_explanations)
+    # Render de theorie oefening met de frameworks en uitleggen
+    return render_template('theory.html', frameworks=frameworks, explanations=explanations)
 
-@app.route("/case", methods=["GET", "POST"])
-def case():
-    if request.method == "POST":
-        submitted_answers = {}
+@app.route('/case', methods=['GET', 'POST'])
+def case_quiz():
+    if request.method == 'POST':
+        answers = request.get_json()  # Dit zijn de gegeven antwoorden
         score = 0
-        total = 0
+        total = len(answers)
         feedback = {}
 
-        for framework, steps in frameworks.items():
-            submitted_answers[framework] = {}
-            for step in steps:
-                case_example = request.form.get(f"{framework}_{step}")
-                submitted_answers[framework][step] = case_example
+        # Omgekeerde dictionary om antwoordopties te relateren aan hun juiste stap
+        example_to_step = {v: k for k, v in case_examples.items()}
 
-                total += 1
-                if case_example == case_correct_answers[framework][step]:
-                    score += 1
-                    feedback[f"{framework} - {step}"] = "Correct"
-                else:
-                    feedback[f"{framework} - {step}"] = f"Incorrect, het juiste antwoord is: {case_correct_answers[framework][step]}"
+        # Debugging: Print de example_to_step en de antwoorden
+        print(f"Example to step mapping: {example_to_step}")
+        print(f"Received answers: {answers}")
 
-        return render_template("result.html", score=score, total=total, feedback=feedback)
+        # Controleer de gegeven antwoorden en geef feedback
+        for step, given_example in answers.items():
+            # Zoek de juiste stap op basis van het gegeven antwoord (beschrijving)
+            correct_step = example_to_step.get(given_example, None)  # Voeg default None toe als fallback
 
-    return render_template("case.html", frameworks=frameworks, case_examples=case_examples)
+            # Debugging: Bekijk wat er gebeurt
+            print(f"Given example: {given_example}, Correct step: {correct_step}, Question step: {step}")
 
-if __name__ == "__main__":
+            # Vergelijk de stap die hoort bij het gegeven antwoord met de vraagstap
+            if correct_step == step:
+                score += 1
+                feedback[step] = {
+                    'selected_answer': given_example,  # Ingevoerde antwoord opslaan
+                    'correct': True,
+                    'correct_step': correct_step  # Correcte stap
+                }
+            else:
+                feedback[step] = {
+                    'selected_answer': given_example,  # Ingevoerde antwoord opslaan
+                    'correct': False,
+                    'correct_step': correct_step  # Correcte stap
+                }
+
+        # Sla de resultaten op in de sessie
+        session['case_results'] = feedback
+        session['frameworks'] = frameworks
+
+        # Stuur de score en feedback terug naar de client
+        return jsonify({'score': score, 'total': total, 'feedback': feedback})
+
+    # Render de casus oefening met frameworks en casusvoorbeelden
+    return render_template('case.html', frameworks=frameworks, case_examples=case_examples)
+
+
+@app.route('/result')
+def result():
+    # Verkrijg de resultaten en frameworks uit de sessie
+    case_results = session.get('case_results', {})
+    frameworks = session.get('frameworks', {})
+
+    # Render de result-pagina met de resultaten en frameworks
+    return render_template('result.html', results=case_results, frameworks=frameworks, case_examples=case_examples)
+
+@app.route('/choose')
+def choose():
+    return redirect(url_for('choose_quiz'))
+
+if __name__ == '__main__':
     app.run(debug=True)

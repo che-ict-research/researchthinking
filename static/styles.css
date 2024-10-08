@@ -1,85 +1,111 @@
 /* Algemene stijlen */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
     margin: 0;
     padding: 0;
-    line-height: 1.6;
-    padding-bottom: 50px;
+    background-color: #f0f0f0;
 }
 
-h1, h2 {
-    color: #2c3e50;
-    text-align: center;
+.container {
+    max-width: 1200px;
+    margin: 40px auto;  /* Geeft ruimte rondom de container */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+    margin-bottom: 20px;
+}
+
+form {
     margin-bottom: 30px;
 }
 
-h1 {
-    margin-top: 30px;
+/* Layout voor vragen en antwoorden */
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px; /* Ruimte tussen vragen en antwoorden */
 }
 
-/* Container voor inhoud */
-.container {
-    width: 80%;
-    max-width: 900px;
-    margin: 40px auto;
-    background: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Stijl voor de vragen (linkerzijde) */
+.questions {
+    width: 60%; /* Iets minder breedte voor de vragen */
 }
 
-/* Knoppen */
-button {
-    display: block;
-    width: 100%;
+/* Stijl voor de antwoordopties (rechterzijde) */
+.answers {
+    width: 35%; /* Breder voor de antwoorden */
+    position: sticky; /* Zorgt ervoor dat dit vast blijft tijdens scrollen */
+    top: 20px; /* Afstand vanaf de bovenkant van de viewport */
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-height: 80vh; /* Zorgt dat de antwoorden niet te lang worden */
+    overflow-y: auto; /* Scrollbaar als er te veel antwoorden zijn */
+}
+
+/* Stijlen voor de draggable en droppable elementen */
+.draggable {
+    padding: 10px;
     background-color: #3498db;
     color: white;
-    padding: 15px;
-    font-size: 18px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: grab;
+    transition: opacity 0.3s ease;
+}
+
+.draggable.dragging {
+    opacity: 0.5; /* Vermindert de zichtbaarheid tijdens het slepen */
+}
+
+.droppable {
+    min-height: 50px;
+    border: 2px dashed #ccc;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.droppable.hovered {
+    background-color: #e0e0e0;
+}
+
+/* Stijl voor een leeg veld (zonder antwoord) */
+.droppable:empty {
+    color: #aaa;
+    text-align: center;
+}
+
+/* Overige stijlen */
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-bottom: 20px;
-    transition: background-color 0.3s ease;
 }
 
 button:hover {
     background-color: #2980b9;
 }
 
-/* Labels en selectievakken */
-label {
-    display: block;
-    margin-top: 20px;
-    font-size: 16px;
-    color: #34495e;
+/* Correct en incorrect icoontjes voor resultaten */
+.correct {
+    color: green;
+    font-size: 20px;
 }
 
-select {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    margin-top: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-bottom: 30px;
-}
-
-/* Uitslagstijl */
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 20px 0;
-}
-
-ul li {
-    background-color: #ecf0f1;
-    margin: 10px 0;
-    padding: 15px;
-    border-left: 5px solid #3498db;
-    border-radius: 3px;
+.incorrect {
+    color: red;
+    font-size: 20px;
 }
 
 /* Links */
@@ -98,16 +124,31 @@ a:hover {
     background-color: #27ae60;
 }
 
-/* Formulier stijl */
-form {
-    margin-bottom: 20px;
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
-/* Extra marges voor ruimte tussen secties */
-.container h2 {
-    margin-top: 50px;
+.answers, .options {
+    display: flex;
+    flex-direction: column;
 }
 
-select, label {
-    margin-bottom: 20
+.droppable, .draggable {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    width: 100px;
+}
+
+.droppable {
+    height: 50px;
+    background-color: #f0f0f0;
+}
+
+.draggable {
+    background-color: lightblue;
+    cursor: grab;
 }
